@@ -1,50 +1,73 @@
 pipeline {
     agent any
 
-    environment {
-        DIRECTORY_PATH = "D:\\workspaces\\ProfessionalPractice\\SampleProject\\src"
-        TESTING_ENVIRONMENT = "development"
-        PRODUCTION_ENVIRONMENT = "production"
-    }
-
-    stages {
+ stages {
         stage('Build') {
             steps {
-                echo "Fetching the source code from ${env.DIRECTORY_PATH}"
-                echo "Compiling the code and generating artifacts"
+                echo 'Building the code using Maven to compile and package the code.'
+                // Add actual build commands here.
             }
         }
 
-        stage('Test') {
+        stage('Unit and Integration Tests') {
             steps {
-                echo "Running unit tests"
-                echo "Running integration tests"
+                echo 'Running unit tests using selenium.'
+              
+                echo 'Running integration tests to ensure different components of the application work together as expected.'
+               
             }
         }
 
-        stage('Code Quality Check') {
+        stage('Code Analysis') {
             steps {
-                echo "Checking the quality of the code"
+                echo 'Integrating a code analysis tool .'
+                // Add commands for code analysis.
             }
         }
 
-        stage('Deploy') {
+        stage('Security Scan') {
             steps {
-                echo "Deploying the application to ${env.TESTING_ENVIRONMENT}"
+                echo 'Performing a security scan on the code using a security scanning tool .'
+                // Add commands for security scanning.
             }
         }
 
-        stage('Approval') {
+        stage('Deploy to Staging') {
             steps {
-                echo "Waiting for manual approval..."
-                sleep 10
+                echo 'Deploying the application to a staging server  AWS.'
+                // Add commands for deployment to staging.
+            }
+        }
+
+        stage('Integration Tests on Staging') {
+            steps {
+                echo 'Running integration tests on the staging environment to ensure the application functions as expected in a production-like environment.'
+                // Add commands to run integration tests on staging.
             }
         }
 
         stage('Deploy to Production') {
             steps {
-                echo "Deploying the code to ${env.PRODUCTION_ENVIRONMENT}"
+                echo 'Deploying the application to a production server (e.g., AWS EC2 instance).'
+                // Add commands for deployment to production.
             }
+        }
+    }
+
+post {
+        success {
+            echo "Pipeline executed successfully!"
+	    	emailext attachLog: true,
+			body: 'successful',
+			subject: 'Build status',
+	    		to: 'anjupalakeel@gmail.com'	
+        }
+        failure {
+            echo "Pipeline execution failed!"
+	    	emailext attachLog: true,
+		body: "failure",
+		subject: "Build status",
+	    	to: "anjupalakeel@gmail.com"
         }
     }
 }
